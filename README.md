@@ -32,9 +32,16 @@ The workflow:
 - Runs on the latest Ubuntu runner.
 - Triggers on pushes to the `main` branch.
 - Builds the Docker image using the `Dockerfile`.
-- Pushes the image to GitHub Container Registry (`ghcr.io`) with tags:
+- Scans the built image for vulnerabilities using Trivy (open source scanner).
+- Pushes the image to GitHub Container Registry (`ghcr.io`) only if no critical or high-severity vulnerabilities are found, with tags:
   - `latest`: For the most recent build.
   - Commit SHA: For version-specific builds.
+
+## Security Scanning
+
+The workflow includes automated vulnerability scanning using [Trivy](https://github.com/aquasecurity/trivy), an open source container scanner. The scan checks for critical and high-severity vulnerabilities in the built image. If vulnerabilities are detected, the workflow fails and the image is not pushed to the registry. Scan results are uploaded to GitHub's Security tab for review.
+
+This ensures that only secure images are published to your container registry.
 
 ## Repository Secrets
 
